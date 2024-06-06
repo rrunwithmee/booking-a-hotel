@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Главная страница</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="text-center">Все отели</h3>
+        <div class="row">
+            {% if hotels %}
+                <p>Список отелей не пуст</p>
+            {% else %}
+                <p>Список отелей пуст</p>
+            {% endif %}
+                {{ hotels }}
+<!--            {% for car in cars %}-->
+<!--                <div class="col">-->
+<!--                    {% include 'hotels.html' %}-->
+<!--                </div>-->
+<!--            {% endfor %}-->
+                </div>
+        </div>
+    </div>
+{% endblock %}
