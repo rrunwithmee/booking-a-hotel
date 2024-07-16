@@ -4,7 +4,7 @@ pipeline{
     stages {
         stage("Clone project") {
             steps {
-                git "https://github.com/polinaburakova/-1.git"
+                git "https://github.com/rrunwithmee/booking-a-hotel.git"
             }
 
         }
