@@ -28,4 +28,4 @@ app.include_router(router_rent)
 
 app.include_router(router_pages)
 
-uvicorn.run(app, port=8001)
+uvicorn.run(app, host="0.0.0.0", port=8001)
