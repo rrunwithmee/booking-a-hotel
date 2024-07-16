@@ -1,0 +1,35 @@
+pipeline{
+    agent any
+
+    stages {
+        stage("Clone project") {
+            steps {
+                git "https://github.com/polinaburakova/-1.git"
+            }
+
+        }
+
+        stage("Run project") {
+            steps {
+                script {
+                sh """
+                docker rm -f booking-hotel-container
+                docker rmi booking-hotel-image
+
+                docker compose build booking-hotel-service
+                docker run -d \
+                      --name booking-hotel-container \
+                      -p 8888:8888 \
+                      booking-hotel-image
+                """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

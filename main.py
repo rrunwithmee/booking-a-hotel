@@ -10,9 +10,6 @@ from rent import router as router_rent
 
 from router import router as router_pages
 
-
-
-
 # from hotel import router as router_pages
 
 
@@ -29,11 +26,6 @@ app.include_router(router_hotel)
 app.include_router(router_room)
 app.include_router(router_rent)
 
-
 app.include_router(router_pages)
 
-
-
 uvicorn.run(app, port=8001)
-
-
