@@ -9,6 +9,11 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Главная</a>
         </li>
+                    {% if request.cookies.get("access_token") %}
+              <li class="nav-item">
+                <a href="/logout" class="btn btn-secondary">Выход</a>
+              </li>
+            {% endif %}
         <li class="nav-item">
           <a class="nav-link" href="/reg">Регистрация</a>
         </li>
