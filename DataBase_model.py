@@ -2,7 +2,7 @@ import datetime
 
 from sqlmodel import Field, SQLModel, create_engine, UniqueConstraint
 import uuid
-from sqlmodel import Session
+from crypto import hash_password
 
 
 
@@ -17,6 +17,10 @@ class User(SQLModel, table=True):
     last_name: str  # отчество
     surname: str  # фамилия
     date_reg: datetime.datetime = Field(default_factory=datetime.datetime.now)  # дата регистрации
+
+
+    def verify_password(self, password):
+        return hash_password(password) == self.password
 
 
 class Hotel(SQLModel, table=True):

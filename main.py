@@ -10,7 +10,7 @@ from rent import router as router_rent
 
 from router import router as router_pages
 
-# from hotel import router as router_pages
+
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -26,6 +26,18 @@ app.include_router(router_hotel)
 app.include_router(router_room)
 app.include_router(router_rent)
 
+
 app.include_router(router_pages)
 
-uvicorn.run(app, host="0.0.0.0", port=8001)
+
+
+
+
+
+
+
+
+
+uvicorn.run(app, port=8000)
+
+
