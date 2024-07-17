@@ -16,11 +16,7 @@ def home_auth(request: Request, db: Session=Depends(db_session)):
     hotels = db.query(Hotel).all()
     rooms = db.query(Room).all()
     return templates.TemplateResponse("home.html", {"request": request, "hotels": hotels, "rooms": rooms})
-# @router.get("/rent")
-# def home(request: Request, db: Session=Depends(db_session)):
-#     hotels = db.query(Hotel).all()
-#     rooms = db.query(Room).all()
-#     return templates.TemplateResponse("home2.html", {"request": request, "hotels": hotels, "rooms": rooms})
+
 
 
 
