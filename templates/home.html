@@ -29,9 +29,13 @@
                                                 <h6>Номера:</h6>
                                                 <ul>
                                                     {% for room in rooms if room.hotel_id == hotel.id %}
-                                                        <li>
+                                                    <li>
                                                             Номер отеля: {{ room.room_number }} Цена: {{ room.price }} рублей
-                                                            <button type="button" class="btn btn-success btn-sm">Забронировать номер</button>
+                                                                                                    {% if request.cookies.get("access_token") %}
+                                              <li class="nav-item">
+                                                <button type="button" class="btn btn-success btn-sm">Забронировать номер</button>
+                                              </li>
+                                            {% endif %}
                                                         </li>
                                                     {% endfor %}
                                                 </ul>

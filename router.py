@@ -10,16 +10,18 @@ router = APIRouter()
 
 templates = Jinja2Templates(directory='templates')
 
+
 @router.get("/")
-def home(request: Request, db: Session=Depends(db_session)):
+def home_auth(request: Request, db: Session=Depends(db_session)):
     hotels = db.query(Hotel).all()
     rooms = db.query(Room).all()
     return templates.TemplateResponse("home.html", {"request": request, "hotels": hotels, "rooms": rooms})
+# @router.get("/rent")
+# def home(request: Request, db: Session=Depends(db_session)):
+#     hotels = db.query(Hotel).all()
+#     rooms = db.query(Room).all()
+#     return templates.TemplateResponse("home2.html", {"request": request, "hotels": hotels, "rooms": rooms})
 
-@router.get("/rent")
-def home_auth(request: Request, db: Session=Depends(db_session)):
-    hotels = db.query(Hotel).all()
-    return templates.TemplateResponse("home.html", {"request": request, "hotels": hotels})
 
 
 
@@ -102,6 +104,6 @@ async def auth(request: Request, db: Session = Depends(db_session)):
 
 @router.get("/logout")
 async def logout(request: Request):
-    response = RedirectResponse(url="/rent", status_code=302)
+    response = RedirectResponse(url="/", status_code=302)
     response.delete_cookie(key="access_token")
     return response
