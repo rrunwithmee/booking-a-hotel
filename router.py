@@ -82,7 +82,7 @@ async def auth(request: Request, db: Session = Depends(db_session)):
         errors.append("Неверны почта или пароль!")
         return templates.TemplateResponse("auth.html", {"request": request, "errors": errors})
 
-    access_token = create_jwt_token(data={"sub": str(user.id)})
+    access_token = create_jwt_token(data={"sub": str(user.id), "email": user.email})
     response = RedirectResponse(url="/", status_code=302)
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return response
@@ -113,13 +113,12 @@ async def rent(request: Request, db: Session = Depends(db_session)):
         token = access_token.replace("Bearer ", "")
         print(token)
         decoded_token = decode_jwt_token('token')
-        id = decoded_token.get('sub')
-
+        print(decoded_token)
         if decoded_token is None:
             errors.append("Неверный токен")
             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
         email = decoded_token.get("email")
-        user = db.exec(select(User).where(User.id == id)).first()
+        user = db.exec(select(User).where(User.email == email)).first()
         hotel_id = db.exec(select(Hotel).where(Hotel.name == name)).first()
         room_number = db.exec(select(Room).where(Room.hotel_id == hotel_id.id, Room.room_number == room_number)).first()
         if user is None:
@@ -140,6 +139,49 @@ async def rent(request: Request, db: Session = Depends(db_session)):
         db.commit()
         msg = 'Вы забронировали!'
         return templates.TemplateResponse('rent.html', {"request": request, "msg": msg})
+
+# @router.post('/rent')
+# async def rent(request: Request, db: Session = Depends(db_session)):
+#     form = await request.form()
+#     name = form.get('name')
+#     room_number = form.get('room_number')
+#     errors = []
+#
+#     access_token = request.cookies.get("access_token")
+#     if not access_token:
+#         errors.append('Войдите')
+#         return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
+#     else:
+#         token = access_token.replace("Bearer ", "")
+#         print(token)
+#         decoded_token = decode_jwt_token('token')
+#         id = decoded_token.get('sub')
+#
+#         if decoded_token is None:
+#             errors.append("Неверный токен")
+#             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
+#         email = decoded_token.get("email")
+#         user = db.exec(select(User).where(User.id == id)).first()
+#         hotel_id = db.exec(select(Hotel).where(Hotel.name == name)).first()
+#         room_number = db.exec(select(Room).where(Room.hotel_id == hotel_id.id, Room.room_number == room_number)).first()
+#         if user is None:
+#             errors.append('Пользователь не найден!')
+#             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
+#         if hotel_id is None:
+#             errors.append('Отель не найден!')
+#             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
+#         if room_number is None:
+#             errors.append('Номер не найден!')
+#             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
+#         rent = db.exec(select(Rent).where(Rent.room_id == room_number.id)).first()
+#         if rent:
+#             errors.append('Номер уже забронирован!')
+#             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
+#         rent = Rent(id_user=user.id, room_id=room_number.id)
+#         db.add(rent)
+#         db.commit()
+#         msg = 'Вы забронировали!'
+#         return templates.TemplateResponse('rent.html', {"request": request, "msg": msg})
 
 
 

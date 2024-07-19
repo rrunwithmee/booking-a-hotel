@@ -18,15 +18,16 @@ def hash_password(password: str):
 
 
 def create_jwt_token(data: dict):
+    now = datetime.utcnow()
     payload = {
-        'iat': datetime.now(),  # Время, когда токен был сгенерирован
-        'exp': datetime.now() + timedelta(hours=1)  # Время истечения токена
+        'iat': now,
+        'exp': now + timedelta(hours=1)
     } | data
 
-    # генерация токена
     encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm=JWT_ALGORITHM)
 
     return encoded_jwt
+
 
 
 

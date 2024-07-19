@@ -39,9 +39,9 @@ def check_user_rout(data: AuthSchema):
     if hash_password(data.password) != user.password:
         return HTTPException(status_code=402, detail="Invalid password")
 
-    return {'access_token': create_jwt_token({'user_id': str(user.id)})}
+    # return {'access_token': create_jwt_token({'user_id': str(user.id)})}
 
-    # return {'access_token': create_jwt_token({'user_id': str(user.id), 'email': user.email})}
+    return {'access_token': create_jwt_token({'user_id': str(user.id), 'email': user.email})}
 
 
 @router.delete('/{user_id}')
