@@ -1,13 +1,21 @@
 import uuid
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from DataBase_def import get_users, get_user_by_id, delete_user, reg_user, get_user_by_email
 from crypto import hash_password, create_jwt_token
 from schemas import AuthSchema, RegUserSchema
 
+
+
+
 router = APIRouter(prefix='/user',
                    tags=['user'],
                    responses={404: {"description": "Not found"}})
+
+
+
+
+
 
 
 
@@ -44,3 +52,6 @@ def reg_user_rout(data: RegUserSchema):
     if reg_user(data.email, hash_password(data.password), data.first_name, data.last_name, data.surname):
         return HTTPException(status_code=200, detail="User registered successfully")
     return HTTPException(status_code=400, detail="User with such email already exists")
+
+
+
