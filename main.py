@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.security import OAuth2PasswordBearer
-
+from starlette.staticfiles import StaticFiles
 # from router import router
 from user import router as router_user
 from room import router as router_room
@@ -17,6 +17,10 @@ app = FastAPI(
     version="0.0.1",
     headers='test'
 )
+
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 app.include_router(router_user)
 app.include_router(router_hotel)
