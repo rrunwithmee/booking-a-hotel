@@ -5,10 +5,7 @@ from DataBase_model import Hotel, User, Room, Rent, engine
 from crypto import hash_password, create_jwt_token, decode_jwt_token
 from DataBase_def import db_session
 from starlette.responses import RedirectResponse
-from schemas import AddRentSchema
-from DataBase_def import create_rent
-import datetime
-import uuid
+
 
 router = APIRouter()
 
@@ -113,12 +110,16 @@ async def rent(request: Request, db: Session = Depends(db_session)):
         errors.append('Войдите')
         return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
     else:
-        decoded_token = decode_jwt_token('access_token')
+        token = access_token.replace("Bearer ", "")
+        print(token)
+        decoded_token = decode_jwt_token('token')
+        id = decoded_token.get('sub')
+
         if decoded_token is None:
             errors.append("Неверный токен")
             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
         email = decoded_token.get("email")
-        user = db.exec(select(User).where(User.email == email)).first()
+        user = db.exec(select(User).where(User.id == id)).first()
         hotel_id = db.exec(select(Hotel).where(Hotel.name == name)).first()
         room_number = db.exec(select(Room).where(Room.hotel_id == hotel_id.id, Room.room_number == room_number)).first()
         if user is None:
