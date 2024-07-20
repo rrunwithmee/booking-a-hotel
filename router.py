@@ -128,9 +128,15 @@ async def rent(request: Request, db: Session = Depends(db_session)):
             errors.append('Номер уже забронирован!')
             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
         rent_add = Rent(id_user=user.id, room_id=room.id)
+        # Генерируем код бронирования
+        rent_add.generate_booking_code()
+
+        # Сохраняем объект в базе данных
         db.add(rent_add)
         db.commit()
-        msg = 'Вы забронировали!'
+
+        msg = ('Вы забронировали номер! Сохраните код бронирования! Он понадобится для отмены бронирования, при утере кода отменить бронирование не получится'
+               '. Код бронирования: {}').format(rent_add.booking_code)
         return templates.TemplateResponse('rent.html', {"request": request, "msg": msg})
 
 
@@ -144,6 +150,7 @@ async def delete_rent(request: Request, db: Session = Depends(db_session)):
     form = await request.form()
     name = form.get('name')
     room_number = form.get('room_number')
+    booking_code = form.get('booking_code')
     errors = []
 
     access_token = request.cookies.get("access_token")
@@ -171,9 +178,9 @@ async def delete_rent(request: Request, db: Session = Depends(db_session)):
             errors.append('Номер не найден!')
             return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
 
-        rent = db.exec(select(Rent).where(Rent.id_user == user.id).where(Rent.room_id == room.id)).first()
+        rent = db.exec(select(Rent).where(Rent.booking_code == booking_code)).first()
         if rent is None:
-            errors.append('Бронирование не найдено!')
+            errors.append('Неверный код бронирования!')
             return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
 
         db.delete(rent)
