@@ -12,7 +12,14 @@ router = APIRouter(prefix='/hotel',
 
 @router.post('/add_hotel')
 def add_hotel(data: AddHotelSchema):
-    create_hotel(data.name, data.address)
+    # Передаем все необходимые параметры в функцию create_hotel
+    create_hotel(
+        name=data.name,
+        address=data.address,
+        city_center_distance=data.city_center_distance,
+        cleaning_frequency=data.cleaning_frequency,
+        parking_availability=data.parking_availability
+    )
 
 
 @router.get('/all')
@@ -33,6 +40,7 @@ def update_hotel(hotel_id: uuid.UUID, data: AddHotelSchema):
 @router.delete('/{hotel_id}')
 def delete_hotel(hotel_id: uuid.UUID):
     delete_hotel_by_id(hotel_id)
+
 
 
 

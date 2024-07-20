@@ -9,20 +9,29 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Главная</a>
         </li>
-                    {% if request.cookies.get("access_token") %}
-              <li class="nav-item">
-                <a href="/logout" class="btn btn-secondary">Выход</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/rent">Бронирование</a>
-              </li>
-            {% endif %}
         <li class="nav-item">
           <a class="nav-link" href="/reg">Регистрация</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/auth">Вход</a>
         </li>
+          {% if request.cookies.get("access_token") %}
+              <li class="nav-item">
+                <a href="/logout" class="btn btn-secondary">Выход</a>
+              </li>
+          <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Отели
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/rent">Бронирование</a></li>
+                  <li><a class="dropdown-item" href="/delete_rent">Отмена бронирования</a></li>
+                </ul>
+              </li>
+<!--              <li class="nav-item">-->
+<!--                <a class="nav-link" href="/rent">Бронирование</a>-->
+<!--              </li>-->
+            {% endif %}
       </ul>
     </div>
   </div>

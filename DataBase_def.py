@@ -39,11 +39,11 @@ def reg_user(email: str,
              last_name: str,
              surname: str, ):
     user = User(
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-                surname=surname
+        email=email,
+        password=password,
+        first_name=first_name,
+        last_name=last_name,
+        surname=surname
     )
     with Session(engine) as session:
         if session.exec(select(User).where(User.email == email)).first() is None:
@@ -54,8 +54,14 @@ def reg_user(email: str,
             return False
 
 
-def create_hotel(name: str, address: str):
-    hotel = Hotel(name=name, address=address)
+def create_hotel(name: str, address: str, city_center_distance: float, cleaning_frequency: str, parking_availability: str):
+    hotel = Hotel(
+        name=name,
+        address=address,
+        city_center_distance=city_center_distance,
+        cleaning_frequency=cleaning_frequency,
+        parking_availability=parking_availability
+    )
 
     with Session(engine) as session:
         session.add(hotel)
@@ -76,8 +82,14 @@ def update_hotel_by_id(hotel_id: uuid.UUID, data: dict):
     with Session(engine) as session:
         hotel = session.exec(select(Hotel).where(Hotel.id == hotel_id)).first()
 
-        hotel.name = data['name']
-        hotel.address = data['address']
+        if not hotel:
+            raise HTTPException(status_code=404, detail="Hotel not found")
+
+        hotel.name = data.get('name', hotel.name)
+        hotel.address = data.get('address', hotel.address)
+        hotel.city_center_distance = data.get('city_center_distance', hotel.city_center_distance)
+        hotel.cleaning_frequency = data.get('cleaning_frequency', hotel.cleaning_frequency)
+        hotel.parking_availability = data.get('parking_availability', hotel.parking_availability)
 
         session.commit()
 
@@ -127,6 +139,8 @@ def update_room(room_id: uuid.UUID, data: dict):
         room.price = data['price']
 
         session.commit()
+
+
 
 
 def create_rent(id_user: uuid.UUID, room_id: uuid.UUID):

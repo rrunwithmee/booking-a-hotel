@@ -12,11 +12,11 @@ router = APIRouter()
 templates = Jinja2Templates(directory='templates')
 
 
-@router.get("/")
-def home_auth(request: Request, db: Session=Depends(db_session)):
+@router.get('/')
+def home(request: Request, db: Session=Depends(db_session)):
     hotels = db.query(Hotel).all()
     rooms = db.query(Room).all()
-    return templates.TemplateResponse("home.html", {"request": request, "hotels": hotels, "rooms": rooms})
+    return templates.TemplateResponse('home.html', {'request': request, 'hotels': hotels, 'rooms': rooms})
 
 
 
@@ -37,7 +37,6 @@ async def reg(request: Request, db: Session = Depends(db_session)):
     if len(password) < 6:
         errors.append("Пароль должен состоять от 6 и более символов!")
         return templates.TemplateResponse("reg.html", {"request": request, "errors": errors})
-
     user = User(email=email,
                 password=hash_password(password=password),
                 first_name=first_name,
@@ -55,10 +54,6 @@ async def reg(request: Request, db: Session = Depends(db_session)):
     db.refresh(user)
     msg = 'Вы зарегистрированы! Войдите в аккуанут!'
     return templates.TemplateResponse('reg.html', {"request": request, "msg": msg})
-
-
-
-
 
 
 @router.get('/auth')
@@ -79,7 +74,7 @@ async def auth(request: Request, db: Session = Depends(db_session)):
         return RedirectResponse(url="/rent", status_code=302)
     user = db.exec(select(User).where(User.email == email)).first()
     if not user or not user.verify_password(password):
-        errors.append("Неверны почта или пароль!")
+        errors.append("Неверны почта или пароль! Или зарегистрируйтесь")
         return templates.TemplateResponse("auth.html", {"request": request, "errors": errors})
 
     access_token = create_jwt_token(data={"sub": str(user.id), "email": user.email})
@@ -113,14 +108,12 @@ async def rent(request: Request, db: Session = Depends(db_session)):
         token = access_token.replace("Bearer ", "")
         decoded_token = decode_jwt_token(token)
         if decoded_token is None:
-            errors.append("Неверный токен")
+            errors.append("Авторизуйте повторно!")
             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
         email = decoded_token.get("email")
         user = db.exec(select(User).where(User.email == email)).first()
         hotel = db.exec(select(Hotel).where(Hotel.name == name)).first()
-        print(hotel)
         room = db.exec(select(Room).where(Room.room_number == room_number).where(Room.hotel_id == hotel.id)).first()
-        print(room)
         if user is None:
             errors.append('Пользователь не найден!')
             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
@@ -139,3 +132,51 @@ async def rent(request: Request, db: Session = Depends(db_session)):
         db.commit()
         msg = 'Вы забронировали!'
         return templates.TemplateResponse('rent.html', {"request": request, "msg": msg})
+
+
+@router.get('/delete_rent')
+def delete_rent(request: Request):
+    return templates.TemplateResponse("delete_rent.html", {"request": request})
+
+
+@router.post('/delete_rent')
+async def delete_rent(request: Request, db: Session = Depends(db_session)):
+    form = await request.form()
+    name = form.get('name')
+    room_number = form.get('room_number')
+    errors = []
+
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        errors.append('Войдите')
+        return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
+    else:
+        token = access_token.replace("Bearer ", "")
+        decoded_token = decode_jwt_token(token)
+        if decoded_token is None:
+            errors.append("Авторизуйте повторно!")
+            return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
+        email = decoded_token.get("email")
+        user = db.exec(select(User).where(User.email == email)).first()
+        hotel = db.exec(select(Hotel).where(Hotel.name == name)).first()
+        room = db.exec(select(Room).where(Room.room_number == room_number).where(Room.hotel_id == hotel.id)).first()
+
+        if user is None:
+            errors.append('Пользователь не найден!')
+            return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
+        if hotel is None:
+            errors.append('Отель не найден!')
+            return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
+        if room is None:
+            errors.append('Номер не найден!')
+            return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
+
+        rent = db.exec(select(Rent).where(Rent.id_user == user.id).where(Rent.room_id == room.id)).first()
+        if rent is None:
+            errors.append('Бронирование не найдено!')
+            return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
+
+        db.delete(rent)
+        db.commit()
+        msg = 'Бронирование удалено!'
+        return templates.TemplateResponse('delete_rent.html', {"request": request, "msg": msg})

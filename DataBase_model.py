@@ -3,8 +3,7 @@ import datetime
 from sqlmodel import Field, SQLModel, create_engine, UniqueConstraint
 import uuid
 from crypto import hash_password
-
-
+from enum import Enum
 
 
 class User(SQLModel, table=True):
@@ -18,9 +17,19 @@ class User(SQLModel, table=True):
     surname: str  # фамилия
     date_reg: datetime.datetime = Field(default_factory=datetime.datetime.now)  # дата регистрации
 
-
     def verify_password(self, password):
         return hash_password(password) == self.password
+
+
+class CleaningFrequency(str, Enum):
+    none = "Нет"
+    daily = "Раз в день"
+    weekly = "Раз в неделю"
+
+
+class ParkingAvailability(str, Enum):
+    yes = "Да"
+    no = "Нет"
 
 
 class Hotel(SQLModel, table=True):
@@ -29,6 +38,9 @@ class Hotel(SQLModel, table=True):
     id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
     name: str = Field(nullable=False)
     address: str = Field(nullable=False)
+    city_center_distance: float = Field(nullable=True)  # Близость к центру города
+    cleaning_frequency: CleaningFrequency  # Наличие уборки
+    parking_availability: ParkingAvailability  # Наличие парковки
 
 
 class Room(SQLModel, table=True):

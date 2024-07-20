@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title><Бронирование></title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Отмена бронирования</h1>
+        {% if msg %}
+                <div class="alert alert-success" role="alert">
+                    {{msg}}
+                </div>
+            {% endif %}
+            {% for error in errors %}
+                    <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                    </div>
+            {% endfor %}
+        <form method="post">
+          <div class="mb-3">
+            <label for="name" class="form-label">Название отеля:</label>
+            <input type="text" class="form-control" name="name">
+          </div>
+          <div class="mb-3">
+            <label for="room_number" class="form-label">Номер комнаты:</label>
+            <input type="text" class="form-control" name="room_number">
+          </div>
+          <button type="submit" class="btn btn-primary">Удалить бронирование</button>
+        </form>
+    </div>
+{% endblock %}

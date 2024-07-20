@@ -1,14 +1,29 @@
 import datetime
 import uuid
-
+from typing import Optional
+from enum import Enum
 from pydantic import BaseModel
 
 
 # Схемы для добавления записи в базу данных
 
+class CleaningFrequency(str, Enum):
+    none = "Нет"
+    daily = "Раз в день"
+    weekly = "Раз в неделю"
+
+
+class ParkingAvailability(str, Enum):
+    yes = "Да"
+    no = "Нет"
+
+
 class AddHotelSchema(BaseModel):
     name: str
     address: str
+    city_center_distance: float  # Близость к центру города
+    cleaning_frequency: CleaningFrequency  # Наличие уборки
+    parking_availability: ParkingAvailability  # Наличие парковки
 
 
 class AddRoomSchema(BaseModel):
