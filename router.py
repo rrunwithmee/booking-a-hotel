@@ -32,11 +32,19 @@ async def reg(request: Request, db: Session = Depends(db_session)):
     first_name = form.get("first_name")
     last_name = form.get("last_name")
     surname = form.get("surname")
+    password2 = form.get("password2")
     errors = []
 
     if len(password) < 6:
         errors.append("Пароль должен состоять от 6 и более символов!")
         return templates.TemplateResponse("reg.html", {"request": request, "errors": errors})
+    print("Password:", password)
+    print("Password2:", password2)
+    if password != password2:
+        errors.append("Неверное повторение пароля!")
+        return templates.TemplateResponse("reg.html", {"request": request, "errors": errors})
+
+
     user = User(email=email,
                 password=hash_password(password=password),
                 first_name=first_name,
@@ -161,7 +169,7 @@ async def delete_rent(request: Request, db: Session = Depends(db_session)):
         token = access_token.replace("Bearer ", "")
         decoded_token = decode_jwt_token(token)
         if decoded_token is None:
-            errors.append("Авторизуйте повторно!")
+            errors.append("Авторизуйтесь повторно!")
             return templates.TemplateResponse("delete_rent.html", {"request": request, "errors": errors})
         email = decoded_token.get("email")
         user = db.exec(select(User).where(User.email == email)).first()
