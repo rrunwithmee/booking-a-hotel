@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Request, Depends, responses, status
+from fastapi import APIRouter, Request, Depends, responses, status, Form
 from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 from DataBase_model import Hotel, User, Room, Rent, engine
 from crypto import hash_password, create_jwt_token, decode_jwt_token
 from DataBase_def import db_session
 from starlette.responses import RedirectResponse
+from fastapi.responses import HTMLResponse
 
 
 router = APIRouter()
@@ -18,6 +19,16 @@ def home(request: Request, db: Session=Depends(db_session)):
     rooms = db.query(Room).all()
     return templates.TemplateResponse('home.html', {'request': request, 'hotels': hotels, 'rooms': rooms})
 
+
+
+@router.post("/search", response_class=HTMLResponse)
+async def search(request: Request, query: str = Form(...), db: Session = Depends(db_session)):
+    # Получение поискового запроса (query)
+    # ... Проверка запроса (optional)
+    # ... Выполнение поиска (SQLModel)
+    hotels = db.query(Hotel).filter(Hotel.name.ilike(f"%{query}%")).all()
+    # ... Возвращение результата
+    return templates.TemplateResponse("search_results.html", {"request": request, "hotels": hotels})
 
 
 @router.get("/reg")
