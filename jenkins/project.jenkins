@@ -19,7 +19,7 @@ pipeline{
                 docker compose build booking-hotel-service
                 docker run -d \
                       --name booking-hotel-container \
-                      -p 8002:8002 \
+                      -p 8001:8001 \
                       booking-hotel-image
                 """
                 }

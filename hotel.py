@@ -16,6 +16,7 @@ def add_hotel(data: AddHotelSchema):
     create_hotel(
         name=data.name,
         address=data.address,
+        star=data.star,
         city_center_distance=data.city_center_distance,
         cleaning_frequency=data.cleaning_frequency,
         parking_availability=data.parking_availability

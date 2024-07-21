@@ -21,6 +21,7 @@ class ParkingAvailability(str, Enum):
 class AddHotelSchema(BaseModel):
     name: str
     address: str
+    star: float
     city_center_distance: float  # Близость к центру города
     cleaning_frequency: CleaningFrequency  # Наличие уборки
     parking_availability: ParkingAvailability  # Наличие парковки

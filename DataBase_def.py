@@ -53,10 +53,11 @@ def reg_user(email: str,
             return False
 
 
-def create_hotel(name: str, address: str, city_center_distance: float, cleaning_frequency: str, parking_availability: str):
+def create_hotel(name: str, address: str, star: float, city_center_distance: float, cleaning_frequency: str, parking_availability: str):
     hotel = Hotel(
         name=name,
         address=address,
+        star=star,
         city_center_distance=city_center_distance,
         cleaning_frequency=cleaning_frequency,
         parking_availability=parking_availability
@@ -86,6 +87,7 @@ def update_hotel_by_id(hotel_id: uuid.UUID, data: dict):
 
         hotel.name = data.get('name', hotel.name)
         hotel.address = data.get('address', hotel.address)
+        hotel.star = data.get('star', hotel.star)
         hotel.city_center_distance = data.get('city_center_distance', hotel.city_center_distance)
         hotel.cleaning_frequency = data.get('cleaning_frequency', hotel.cleaning_frequency)
         hotel.parking_availability = data.get('parking_availability', hotel.parking_availability)
@@ -182,3 +184,10 @@ def update_rent(rent_id: uuid.UUID, data: dict):
 def db_session():
     with Session(engine) as session:
         yield session
+
+# def get_db():
+#     with Session(engine) as session:
+#         try:
+#             yield session
+#         finally:
+#             session.close()
