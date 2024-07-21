@@ -184,10 +184,3 @@ def update_rent(rent_id: uuid.UUID, data: dict):
 def db_session():
     with Session(engine) as session:
         yield session
-
-# def get_db():
-#     with Session(engine) as session:
-#         try:
-#             yield session
-#         finally:
-#             session.close()

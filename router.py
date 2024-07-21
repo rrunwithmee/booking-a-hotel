@@ -23,11 +23,7 @@ def home(request: Request, db: Session=Depends(db_session)):
 
 @router.post("/search", response_class=HTMLResponse)
 async def search(request: Request, query: str = Form(...), db: Session = Depends(db_session)):
-    # Получение поискового запроса (query)
-    # ... Проверка запроса (optional)
-    # ... Выполнение поиска (SQLModel)
     hotels = db.query(Hotel).filter(Hotel.name.ilike(f"%{query}%")).all()
-    # ... Возвращение результата
     return templates.TemplateResponse("search_results.html", {"request": request, "hotels": hotels})
 
 
@@ -49,8 +45,6 @@ async def reg(request: Request, db: Session = Depends(db_session)):
     if len(password) < 6:
         errors.append("Пароль должен состоять от 6 и более символов!")
         return templates.TemplateResponse("reg.html", {"request": request, "errors": errors})
-    print("Password:", password)
-    print("Password2:", password2)
     if password != password2:
         errors.append("Неверное повторение пароля!")
         return templates.TemplateResponse("reg.html", {"request": request, "errors": errors})
@@ -206,3 +200,38 @@ async def delete_rent(request: Request, db: Session = Depends(db_session)):
         db.commit()
         msg = 'Бронирование удалено!'
         return templates.TemplateResponse('delete_rent.html', {"request": request, "msg": msg})
+
+
+
+@router.get("/lk")
+async def lk(request: Request, db: Session = Depends(db_session)):
+    access_token = request.cookies.get("access_token")
+    errors = []
+
+    if not access_token:
+        errors.append('Войдите')
+        return templates.TemplateResponse("lk.html", {"request": request, "errors": errors})
+
+    token = access_token.replace("Bearer ", "")
+    decoded_token = decode_jwt_token(token)
+
+    if decoded_token is None:
+        errors.append("Авторизуйтесь повторно!")
+        return templates.TemplateResponse("lk.html", {"request": request, "errors": errors})
+
+    email = decoded_token.get("email")
+    user = db.exec(select(User).where(User.email == email)).first()
+
+    if user is None:
+        errors.append('Пользователь не найден!')
+        return templates.TemplateResponse("lk.html", {"request": request, "errors": errors})
+
+    rent = db.exec(select(Rent).where(Rent.id_user == user.id)).first()
+
+    if rent:
+        room = db.exec(select(Room).where(Room.id == rent.room_id)).first()
+        hotel = db.exec(select(Hotel).where(Hotel.id == room.hotel_id)).first()
+        return templates.TemplateResponse("lk.html", {"request": request, "user": user, "rent": rent, "room": room, "hotel": hotel})
+    else:
+        return templates.TemplateResponse("lk.html", {"request": request, "user": user})
+

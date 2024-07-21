@@ -7,7 +7,6 @@ from sqlmodel import Field, SQLModel, create_engine, UniqueConstraint
 import uuid
 from crypto import hash_password
 from enum import Enum
-from pydantic import BaseModel
 
 
 class User(SQLModel, table=True):
@@ -23,6 +22,7 @@ class User(SQLModel, table=True):
 
     def verify_password(self, password):
         return hash_password(password) == self.password
+
 
 
 class CleaningFrequency(str, Enum):
@@ -47,13 +47,6 @@ class Hotel(SQLModel, table=True):
     cleaning_frequency: CleaningFrequency  # Наличие уборки
     parking_availability: ParkingAvailability  # Наличие парковки
 
-
-# class SearchQuery(BaseModel):
-#     name: str = None
-#     address: str = None
-#     city_center_distance: float = None
-#     cleaning_frequency: CleaningFrequency = None
-#     parking_availability: ParkingAvailability = None
 
 
 class Room(SQLModel, table=True):
