@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Результаты поиска</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="text-center">Результаты поиска</h3>
+        <div class="row">
+            {% if hotels %}
+                {% for hotel in hotels %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ hotel.name }}</h5>
+                                <button type="button" style="background-color: #20B2AA; color: #ffffff;" data-bs-toggle="modal" data-bs-target="#hotelInfoModal{{ hotel.id }}">
+                                    Информация об отеле
+                                </button>
+
+
+                                <div class="modal fade" id="hotelInfoModal{{ hotel.id }}" tabindex="-1" aria-labelledby="hotelInfoModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="hotelInfoModalLabel">{{ hotel.name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                    <h6>Номера:</h6>
+                                                    <ul>
+                                                        {% for room in rooms if room.hotel_id == hotel.id %}
+                                                        <li>
+                                                                Номер комнаты: {{ room.room_number }} Цена: {{ room.price }} рублей
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+
+                                                <h6>Адрес:</h6>
+                                                <ul>
+                                                        <li>{{ hotel.address }}</li>
+                                                </ul>
+                                                <h6>Звезд:</h6>
+                                                <ul>
+                                                        <li>{{ hotel.star }} </li>
+                                                </ul>
+                                                <h6>От центра города:</h6>
+                                                <ul>
+                                                        <li>{{ hotel.city_center_distance }} км</li>
+                                                </ul>
+                                                <h6>Наличие уборки:</h6>
+                                                <ul>
+                                                        <li>{{ hotel.cleaning_frequency.value }} </li>
+                                                </ul>
+                                                <h6>Наличие парковки:</h6>
+                                                <ul>
+                                                        <li>{{ hotel.parking_availability.value }} </li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+            {% else %}
+            <p>Ничего не найдено</p>
+        {% endif %}
+    </div>
+{% endblock %}

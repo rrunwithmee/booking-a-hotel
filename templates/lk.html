@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Личный кабинет</title>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3 class="text-center">Информация о пользователе</h3>
+        <p>Имя: {{ user.first_name }}</p>
+        <p>Фамилия: {{ user.last_name }}</p>
+        <p>Отчество: {{ user.surname }}</p>
+        <p>Почта: {{ user.email }}</p>
+
+        {% if rent %}
+            <h4>Забронированный номер:</h4>
+            <p>Отель: {{ hotel.name }}</p>
+            <p>Номер: {{ room.room_number }}</p>
+            <p>Код бронирования: {{ rent.booking_code }}</p>
+        {% else %}
+            <p>У Вас нет забронированных номеров.</p>
+        {% endif %}
+    </div>
+{% endblock %}
