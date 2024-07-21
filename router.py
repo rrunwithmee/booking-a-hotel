@@ -116,7 +116,7 @@ async def rent(request: Request, db: Session = Depends(db_session)):
         token = access_token.replace("Bearer ", "")
         decoded_token = decode_jwt_token(token)
         if decoded_token is None:
-            errors.append("Авторизуйте повторно!")
+            errors.append("Авторизуйтесь повторно!")
             return templates.TemplateResponse("rent.html", {"request": request, "errors": errors})
         email = decoded_token.get("email")
         user = db.exec(select(User).where(User.email == email)).first()
