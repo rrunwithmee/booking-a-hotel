@@ -1,9 +1,8 @@
 import uuid
-from passlib.hash import pbkdf2_sha256
-import datetime
 
-from fastapi import HTTPException, Response
-from sqlalchemy import delete, update
+
+from fastapi import HTTPException
+from sqlalchemy import delete
 
 from DataBase_model import User, Room, engine, Hotel, Rent
 from sqlmodel import Session, select

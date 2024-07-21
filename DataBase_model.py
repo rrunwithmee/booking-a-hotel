@@ -62,10 +62,10 @@ class Rent(SQLModel, table=True):
     id_user: uuid.UUID = Field(foreign_key='user.id', nullable=False)  # id_пользователя
     room_id: uuid.UUID = Field(foreign_key='room.id', nullable=False)
     data_rent: datetime.datetime = Field(nullable=False, default_factory=datetime.datetime.now)  # дата аренды
-    booking_code: str = Field(default=None)  # Здесь будет храниться код бронирования
+    booking_code: str = Field(default=None)
 
     def generate_booking_code(self):
-        self.booking_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        self.booking_code = ''.join(random.choices(string.digits, k=4))
 
 class UserUpdate(SQLModel):
     email: str

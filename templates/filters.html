@@ -1,0 +1,195 @@
+<div class="bg-light p-1" style="position: relative;">
+    <img src="{{url_for('static', path='background_of_the_filter_panel.jpg') }}" style="width: 100%; height: 100%;" >
+    <h4>Фильтры поиска</h4>
+    <form>
+ <div class="mb-3" id="priceFilterRange">
+    <label for="ratingFilter" class="form-label">Цена (руб/сутки)</label>
+    <div class="d-flex align-items-center">
+        <div class="form-check me-3">
+            <input class="form-check-input" type="checkbox" id="priceFilterPeriodNotImportant">
+            <label class="form-check-label" for="priceFilterPeriodNotImportant">Не важно</label>
+        </div>
+        <div>
+            <div class="position-relative">
+                 <span id="priceFilterValue" class="text-center d-block">2000</span>
+                 <input type="range" class="form-range" id="priceFilter" min="2000" max="14000" step="500" value="2000" disabled>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span>2k</span>
+                <span>14k</span>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="mb-3" id="ratingFilterRange">
+
+            <label for="ratingFilter" class="form-label">Рейтинг (Звёзды)</label>
+            <div class="d-flex align-items-center">
+                <div class="form-check me-3">
+                    <input class="form-check-input" type="checkbox" id="ratingFilterNotImportant">
+                    <label class="form-check-label" for="ratingFilterNotImportant">Не важно</label>
+                </div>
+                <div>
+
+                    <div class="d-flex justify-content-between">
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                    </div>
+                    <input type="range" class="form-range" id="ratingFilter" min="1" max="5" step="1" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="sortOrder" class="form-label">Сортировка</label>
+            <select class="form-select" id="sortOrder">
+                <option value="price_asc">Цена (по возрастанию)</option>
+                <option value="price_desc">Цена (по убыванию)</option>
+                <option value="rating_asc">Рейтинг (по возрастанию)</option>
+                <option value="rating_desc">Рейтинг (по убыванию)</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="propertyType" class="form-label">Тип недвижимости</label>
+            <select class="form-select" id="propertyType">
+                <option value="">Не важно</option>
+                <option value="house">Дом</option>
+                <option value="apartment">Квартира</option>
+                <option value="studio">Студия</option>
+                <option value="other">Другое</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="roomCount" class="form-label">Количество комнат</label>
+            <select class="form-select" id="roomCount">
+                <option value="">Не важно</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">4+</option>
+            </select>
+        </div>
+       <div class="mb-3">
+            <label class="form-label">Удалённость от центра (км)</label>
+                 <div class="d-flex align-items-center">
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="checkbox" name="distanceFromCenter" id="distanceFromCenterAll" value="" checked>
+                        <label class="form-check-label" for="distanceFromCenterAll">Не важно</label>
+        </div>
+        <div>
+            <div class="position-relative">
+                <span id="distanceFromCenterValue" class="text-center d-block">0</span>
+                <input type="range" class="form-range" id="distanceFromCenterRangeInput" min="0" max="50" step="5" value="0" disabled>
+
+            </div>
+            <div class="d-flex justify-content-between">
+                <span>0 км</span>
+                <span>50 км</span>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="mb-3">
+            <label for="hasParking" class="form-label">Наличие парковки</label>
+            <select class="form-select" id="hasParking">
+                <option value="">Не важно</option>
+                <option value="yes">Есть</option>
+                <option value="yes_vip">Есть, в том числе VIP-места</option>
+                <option value="no">Нет</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="cleaningFrequency" class="form-label">Уборка</label>
+            <select class="form-select" id="cleaningFrequency">
+                <option value="">Не важно</option>
+                <option value="never">Никогда</option>
+                <option value="daily">Ежедневно</option>
+                <option value="weekly">Еженедельно</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>
+                <input type="checkbox" id="allInclusive"> Всё включено
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Искать</button>
+    </form>
+</div>
+
+<script>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Устанавливаем галочку "Не важно" для цены по умолчанию
+const priceFilterPeriodNotImportant = document.getElementById('priceFilterPeriodNotImportant');
+priceFilterPeriodNotImportant.checked = true;
+togglePriceFilter();
+
+// Устанавливаем галочку "Не важно" для рейтинга по умолчанию
+const ratingFilterNotImportant = document.getElementById('ratingFilterNotImportant');
+ratingFilterNotImportant.checked = true;
+toggleRatingFilter();
+
+// Устанавливаем чекбокс "Не важно" для удаленности от центра по умолчанию
+const distanceFromCenterAll = document.getElementById('distanceFromCenterAll');
+const distanceFromCenterRangeInput = document.getElementById('distanceFromCenterRangeInput');
+const distanceFromCenterValue = document.getElementById('distanceFromCenterValue');
+distanceFromCenterAll.checked = true;
+toggleDistanceFromCenter();
+
+// Функция для включения/выключения фильтра по цене
+function togglePriceFilter() {
+    const priceFilter = document.getElementById('priceFilter');
+    if (priceFilterPeriodNotImportant.checked) {
+        priceFilter.disabled = true;
+    } else {
+        priceFilter.disabled = false;
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Функция для включения/выключения фильтра по рейтингу
+function toggleRatingFilter() {
+    const ratingFilter = document.getElementById('ratingFilter');
+    if (ratingFilterNotImportant.checked) {
+        ratingFilter.disabled = true;
+    } else {
+        ratingFilter.disabled = false;
+    }
+}
+
+// Функция для включения/выключения фильтра по удаленности от центра
+function toggleDistanceFromCenter() {
+    if (distanceFromCenterAll.checked) {
+        distanceFromCenterRangeInput.disabled = true;
+    } else {
+        distanceFromCenterRangeInput.disabled = false;
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Обновляем значение над ползунком при его движении
+distanceFromCenterRangeInput.addEventListener('input', () => {
+    distanceFromCenterValue.textContent = distanceFromCenterRangeInput.value;
+});
+
+
+    const priceFilter = document.getElementById('priceFilter');
+    const priceFilterValue = document.getElementById('priceFilterValue');
+    priceFilter.addEventListener('input', () => {
+        priceFilterValue.textContent = `${priceFilter.value}`;
+    });
+
+// Добавляем обработчик события на изменение состояния чекбокса
+distanceFromCenterAll.addEventListener('change', toggleDistanceFromCenter);
+
+// Добавляем обработчики событий на изменение состояния галочек
+priceFilterPeriodNotImportant.addEventListener('change', togglePriceFilter);
+ratingFilterNotImportant.addEventListener('change', toggleRatingFilter);
+
+</script>

@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">Бронирование отелей</a>
+    <a class="navbar-brand" href="/">
+      <img src="{{url_for('static', path='image.png') }}" alt="Логотип" height="80" width="80">
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -9,30 +11,96 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Главная</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/reg">Регистрация</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/auth">Вход</a>
-        </li>
-          {% if request.cookies.get("access_token") %}
-              <li class="nav-item">
-                <a href="/logout" class="btn btn-secondary">Выход</a>
-              </li>
+        {% if not request.cookies.get("access_token") %}
+          <li class="nav-item">
+            <a class="nav-link" href="/reg">Регистрация</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth">Вход</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a href="/logout" class="btn btn-secondary">Выход</a>
+          </li>
           <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Отели
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/rent">Бронирование</a></li>
-                  <li><a class="dropdown-item" href="/delete_rent">Отмена бронирования</a></li>
-                </ul>
-              </li>
-<!--              <li class="nav-item">-->
-<!--                <a class="nav-link" href="/rent">Бронирование</a>-->
-<!--              </li>-->
-            {% endif %}
+            <a class="nav-link dropdown-toggle" href="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Отели
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/rent">Бронирование</a></li>
+              <li><a class="dropdown-item" href="/delete_rent">Отмена бронирования</a></li>
+            </ul>
+          </li>
+        {% endif %}
       </ul>
+      <form class="d-flex align-items-center" role="search">
+        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" style="max-width: 200px;">
+        <button class="btn btn-outline-success" type="submit">Поиск</button>
+      </form>
     </div>
   </div>
 </nav>
+
+<script>
+// Получаем ссылки на элементы навигации
+const homeLink = document.getElementById('homeLink');
+const regLink = document.getElementById('regLink');
+const authLink = document.getElementById('authLink');
+
+// Функция для увеличения размера кнопки при наведении
+function handleButtonHover(button) {
+  button.addEventListener('mouseover', () => {
+    button.style.transform = 'scale(1.1)';
+    button.style.transition = 'transform 0.3s ease';
+  });
+
+  button.addEventListener('mouseout', () => {
+    button.style.transform = 'scale(1)';
+    button.style.transition = 'transform 0.3s ease';
+  });
+}
+
+// Применяем эффект увеличения размера к кнопкам навигации
+handleButtonHover(homeLink);
+handleButtonHover(regLink);
+handleButtonHover(authLink);
+
+// Получаем текущий URL
+const currentURL = window.location.pathname;
+
+// Функция для выделения активного пункта навигации
+function setActiveLink() {
+  // Удаляем класс "active" со всех ссылок
+  homeLink.classList.remove('active');
+  regLink.classList.remove('active');
+  authLink.classList.remove('active');
+
+  // Добавляем класс "active" к соответствующей ссылке
+  if (currentURL === '/') {
+    homeLink.classList.add('active');
+  } else if (currentURL === '/reg') {
+    regLink.classList.add('active');
+  } else if (currentURL === '/auth') {
+    authLink.classList.add('active');
+  }
+}
+
+// Вызываем функцию для установки активной ссылки
+setActiveLink();
+
+// Добавляем обработчики событий на клик по ссылкам
+homeLink.addEventListener('click', () => {
+  setActiveLink();
+  console.log('Переход на главную страницу');
+});
+
+regLink.addEventListener('click', () => {
+  setActiveLink();
+  console.log('Переход на страницу регистрации');
+});
+
+authLink.addEventListener('click', () => {
+  setActiveLink();
+  console.log('Переход на страницу авторизации');
+});
+</script>
