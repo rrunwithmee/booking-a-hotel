@@ -1,0 +1,48 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #b0e0e6; /* Светло-бирюзовый цвет фона */
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+  color: #008080; /* Темно-бирюзовый цвет заголовка */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+h4 {
+  color: #008080; /* Темно-бирюзовый цвет заголовка */
+  margin-bottom: 10px;
+}
+
+/* Дополнительные стили для "забронированных номеров" */
+.booking-info {
+  padding: 10px;
+  border: 1px solid #008080;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.booking-info p {
+  margin-bottom: 5px;
+}
+
+/* Стиль для текста без забронированных номеров */
+.no-booking {
+  color: #666;
+  text-align: center;
+}

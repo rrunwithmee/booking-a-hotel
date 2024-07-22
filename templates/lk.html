@@ -13,12 +13,14 @@
         <p>Почта: {{ user.email }}</p>
 
         {% if rent %}
-            <h4>Забронированный номер:</h4>
-            <p>Отель: {{ hotel.name }}</p>
-            <p>Номер: {{ room.room_number }}</p>
-            <p>Код бронирования: {{ rent.booking_code }}</p>
+            <div class="booking-info">
+                <h4>Забронированный номер:</h4>
+                <p>Отель: {{ hotel.name }}</p>
+                <p>Номер: {{ room.room_number }}</p>
+                <p>Код бронирования: {{ rent.booking_code }}</p>
+            </div>
         {% else %}
-            <p>У Вас нет забронированных номеров.</p>
+            <p class="no-booking">У Вас нет забронированных номеров.</p>
         {% endif %}
     </div>
 {% endblock %}
