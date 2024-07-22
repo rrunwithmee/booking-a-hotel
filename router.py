@@ -22,8 +22,8 @@ def home(request: Request, db: Session=Depends(db_session)):
 
 
 @router.post("/search", response_class=HTMLResponse)
-async def search(request: Request, db: Session = Depends(db_session)):
-    hotels = db.query(Hotel).all()
+async def search(request: Request, query: str = Form(...), db: Session = Depends(db_session)):
+    hotels = db.query(Hotel).filter(Hotel.name.ilike(f"%{query}%")).all()
     return templates.TemplateResponse("search_results.html", {"request": request, "hotels": hotels})
 
 
