@@ -2,9 +2,9 @@ version: "3.8"
 
 services:
   booking-hotel-service:
-    container_name: booking-hotel-container
+    container_name: project-container
     build: .
-    image: booking-hotel-image
+    image: project-image
     volumes:
       - ./:/app
     ports:
@@ -14,7 +14,7 @@ services:
   jenkins-service:
     container_name: jenkins-container
     build: ./jenkins
-    image: jenkins-image
+    image: jenkins-imager
     volumes:
       - ./jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
