@@ -2,9 +2,9 @@ version: "3.8"
 
 services:
   booking-hotel-service:
-    container_name: project-container
+    container_name: booking-hotel-container
     build: .
-    image: project-image
+    image: booking-hotel-image
     volumes:
       - ./:/app
     ports:

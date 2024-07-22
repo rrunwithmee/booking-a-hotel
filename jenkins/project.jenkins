@@ -13,14 +13,14 @@ pipeline{
             steps {
                 script {
                 sh """
-                docker rm -f project-container
-                docker rmi project-image
+                docker rm -f booking-hotel-container
+                docker rmi booking-hotel-image
 
-                docker compose build project-service
+                docker compose build booking-hotel-service
                 docker run -d \
-                      --name project-container \
+                      --name booking-hotel-container \
                       -p 8002:8002 \
-                      project-image
+                      booking-hotel-image
                 """
                 }
             }
